@@ -52,7 +52,6 @@ def index():
       model_output_df = pd.DataFrame()
       model_output_df['Prediction'] = model_output
       
-      print(model_output)
       del loaded_model
       del model_output
       del df

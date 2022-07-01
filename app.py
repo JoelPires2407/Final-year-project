@@ -31,6 +31,10 @@ def index():
       result = transform(stream.read())
 
       df = pd.read_csv(StringIO(result))
+      del csv_input
+      del result
+      del stream
+      
     
       pmap = {'icmp':0,'tcp':1,'udp':2}
       df['protocol_type'] =df['protocol_type'].map(pmap)
@@ -44,11 +48,16 @@ def index():
 
       # load the model from disk
       loaded_model = pickle.load(open('model1.pkl', 'rb'))
-      predicted = loaded_model.predict(df)
+      model_output = loaded_model.predict(df)
+      model_output_df = pd.DataFrame()
+      model_output_df['Prediction'] = model_output
       
-      del(loaded_model)  
-        
-      response = make_response(predicted.to_csv())
+      print(model_output)
+      del loaded_model
+      del model_output
+      del df
+      
+      response = make_response(model_output_df['Prediction'].to_csv())
       response.headers["Content-Disposition"] = "attachment; filename=result.csv"
        # return render_template('index.html')
       return response
@@ -57,5 +66,3 @@ def index():
 
 if __name__ == "__main__":
     app.run(debug=True)
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port)

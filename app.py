@@ -44,10 +44,11 @@ def index():
 
       # load the model from disk
       loaded_model = pickle.load(open('model1.pkl', 'rb'))
-      df['prediction'] = loaded_model.predict(df)
-      print(df['prediction'])
-
-      response = make_response(df['prediction'].to_csv())
+      predicted = loaded_model.predict(df)
+      
+      del(loaded_model)  
+        
+      response = make_response(predicted.to_csv())
       response.headers["Content-Disposition"] = "attachment; filename=result.csv"
        # return render_template('index.html')
       return response
